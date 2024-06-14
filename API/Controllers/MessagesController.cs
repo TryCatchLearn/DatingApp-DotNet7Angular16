@@ -31,7 +31,8 @@ public class MessagesController : BaseApiController
         var sender = await _uow.UserRepository.GetUserByUsernameAsync(username);
         var recipient = await _uow.UserRepository.GetUserByUsernameAsync(createMessageDto.RecipientUsername);
 
-        if (recipient == null) return NotFound();
+        if (recipient == null || sender == null || sender.UserName == null || recipient.UserName == null) 
+            return BadRequest("Cannot send message at this time");
 
         var message = new Message
         {
@@ -69,6 +70,8 @@ public class MessagesController : BaseApiController
         var username = User.GetUsername();
 
         var message = await _uow.MessageRepository.GetMessage(id);
+
+        if (message == null) return BadRequest("Cannot delete this message");
 
         if (message.SenderUsername != username && message.RecipientUsername != username) 
             return Unauthorized();

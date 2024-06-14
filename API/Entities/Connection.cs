@@ -13,6 +13,6 @@ public class Connection
         Username = username;
     }
 
-    public string ConnectionId { get; set; }
-    public string Username { get; set; }
+    public required string ConnectionId { get; set; }
+    public required string Username { get; set; }
 }

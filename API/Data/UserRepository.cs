@@ -18,7 +18,7 @@ public class UserRepository : IUserRepository
         _mapper = mapper;
     }
 
-    public async Task<MemberDto> GetMemberAsync(string username)
+    public async Task<MemberDto?> GetMemberAsync(string username)
     {
         return await _context.Users
             .Where(x => x.UserName == username)
@@ -49,12 +49,12 @@ public class UserRepository : IUserRepository
                 userParams.PageNumber, userParams.PageSize);
     }
 
-    public async Task<AppUser> GetUserByIdAsync(int id)
+    public async Task<AppUser?> GetUserByIdAsync(int id)
     {
         return await _context.Users.FindAsync(id);
     }
 
-    public async Task<AppUser> GetUserByUsernameAsync(string username)
+    public async Task<AppUser?> GetUserByUsernameAsync(string username)
     {
         return await _context.Users
             .Include(p => p.Photos)

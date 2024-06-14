@@ -34,12 +34,12 @@ public class MessageRepository : IMessageRepository
         _context.Messages.Remove(message);
     }
 
-    public async Task<Connection> GetConnection(string connectionId)
+    public async Task<Connection?> GetConnection(string connectionId)
     {
         return await _context.Connections.FindAsync(connectionId);
     }
 
-    public async Task<Group> GetGroupForConnection(string connectionId)
+    public async Task<Group?> GetGroupForConnection(string connectionId)
     {
         return await _context.Groups
             .Include(x => x.Connections)
@@ -47,12 +47,12 @@ public class MessageRepository : IMessageRepository
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Message> GetMessage(int id)
+    public async Task<Message?> GetMessage(int id)
     {
         return await _context.Messages.FindAsync(id);
     }
 
-    public async Task<Group> GetMessageGroup(string groupName)
+    public async Task<Group?> GetMessageGroup(string groupName)
     {
         return await _context.Groups
             .Include(x => x.Connections)

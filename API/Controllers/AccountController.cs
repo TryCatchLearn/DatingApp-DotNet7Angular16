@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using API.Data;
-using API.DTOs;
+﻿using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using AutoMapper;
@@ -65,7 +62,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
-            Username = user.UserName,
+            Username = user.UserName!,
             Token = await _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
             KnownAs = user.KnownAs,

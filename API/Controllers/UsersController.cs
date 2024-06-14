@@ -30,6 +30,9 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
     {
         var currentUser = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+
+        if (currentUser == null) return BadRequest("Could not get user");
+
         userParams.CurrentUsername = currentUser.UserName;
 
         if (string.IsNullOrEmpty(userParams.Gender))
@@ -46,13 +49,19 @@ public class UsersController : BaseApiController
     [HttpGet("{username}")]
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
-        return await _uow.UserRepository.GetMemberAsync(username);
+        var user = await _uow.UserRepository.GetMemberAsync(username);
+
+        if (user == null) return NotFound();
+
+        return user;
     }
 
     [HttpPut]
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
         var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+
+        if (user == null) return BadRequest("Could not find user");
 
         _mapper.Map(memberUpdateDto, user);
 
@@ -67,6 +76,8 @@ public class UsersController : BaseApiController
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
         var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+
+        if (user == null) return BadRequest("Could not find user");
 
         var result = await _photoService.AddPhotoAsync(file);
 
@@ -94,6 +105,8 @@ public class UsersController : BaseApiController
     {
         var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
+        if (user == null) return BadRequest("Could not find user");
+
         var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
         if (photo == null) return NotFound();
@@ -113,6 +126,8 @@ public class UsersController : BaseApiController
     public async Task<ActionResult> DeletePhoto(int photoId)
     {
         var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+
+        if (user == null) return BadRequest("Could not find user");
 
         var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 

@@ -10,12 +10,14 @@ public class LogUserActivity : IAsyncActionFilter
     {
         var resultContext = await next();
 
-        if (!resultContext.HttpContext.User.Identity.IsAuthenticated) return;
+        // changed approach to accommodate nullable types
+        if (resultContext.HttpContext.User.Identity?.IsAuthenticated != true) return;
 
         var userId = resultContext.HttpContext.User.GetUserId();
 
         var uow = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
         var user = await uow.UserRepository.GetUserByIdAsync(userId);
+        if (user == null) return;
         user.LastActive = DateTime.UtcNow;
         await uow.Complete();
     }

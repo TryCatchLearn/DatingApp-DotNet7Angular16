@@ -14,12 +14,16 @@ public class TokenService : ITokenService
     private readonly UserManager<AppUser> _userManager;
     public TokenService(IConfiguration config, UserManager<AppUser> userManager)
     {
+        // defensive check as tokenKey could be null;
+        var tokenKey = config["TokenKey"] ?? throw new Exception("Cannot access tokenKey from appsettings");
         _userManager = userManager;
-        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+        _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
 
     }
     public async Task<string> CreateToken(AppUser user)
     {
+        // defensive check as username could be null
+        if (user.UserName == null) throw new Exception("No username for user");
         var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),

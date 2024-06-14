@@ -4,6 +4,8 @@ namespace API.Entities;
 
 public class AppUserRole : IdentityUserRole<int>
 {
-    public AppUser User { get; set; }
-    public AppRole Role { get; set; }
+    // navigation properties in EF need to be initialised to null so
+    // use the null forgiving operator for these
+    public AppUser User { get; set; } = null!;
+    public AppRole Role { get; set; } = null!;
 }
