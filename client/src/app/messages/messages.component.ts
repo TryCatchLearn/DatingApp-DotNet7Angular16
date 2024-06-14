@@ -2,11 +2,19 @@ import { Component } from '@angular/core';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
 import { MessageService } from '../_services/message.service';
+import { TimeagoModule } from 'ngx-timeago';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { RouterLink } from '@angular/router';
+import { NgIf, NgFor, TitleCasePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 @Component({
-  selector: 'app-messages',
-  templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+    selector: 'app-messages',
+    templateUrl: './messages.component.html',
+    styleUrls: ['./messages.component.css'],
+    standalone: true,
+    imports: [ButtonsModule, FormsModule, NgIf, NgFor, RouterLink, PaginationModule, TitleCasePipe, TimeagoModule]
 })
 export class MessagesComponent {
   messages?: Message[] = [];

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { of, map, take } from 'rxjs';
@@ -12,20 +12,17 @@ import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
   providedIn: 'root'
 })
 export class MembersService {
+  private http = inject(HttpClient);
+  private accountService = inject(AccountService);
+
   baseUrl = environment.apiUrl;
   members: Member[] = [];
   memberCache = new Map();
-  user?: User | null;
+  user = this.accountService.currentUser();
   userParams: UserParams | undefined;
 
-  constructor(private http: HttpClient, private accountService: AccountService) { 
-    this.accountService.currentUser$.pipe(take(1)).subscribe({
-      next: user => {
-        if (user)
-          this.userParams = new UserParams(user);
-          this.user = user;
-      }
-    })
+  constructor() { 
+    if (this.user) this.userParams = new UserParams(this.user);
   }
 
   getUserParams() {

@@ -1,10 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-test-errors',
-  templateUrl: './test-errors.component.html',
-  styleUrls: ['./test-errors.component.css']
+    selector: 'app-test-errors',
+    templateUrl: './test-errors.component.html',
+    styleUrls: ['./test-errors.component.css'],
+    standalone: true,
+    imports: [NgIf, NgFor]
 })
 export class TestErrorsComponent implements OnInit {
   baseUrl = 'https://localhost:5001/api/';

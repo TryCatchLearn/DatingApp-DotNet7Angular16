@@ -1,23 +1,18 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { take } from 'rxjs';
 import { User } from '../_models/user';
 import { AccountService } from '../_services/account.service';
 
 @Directive({
-  selector: '[appHasRole]'
+    selector: '[appHasRole]',
+    standalone: true
 })
 export class HasRoleDirective {
+  private accountService = inject(AccountService);
   @Input() appHasRole: string[] = [];
-  user: User = {} as User;
+  user = this.accountService.currentUser();
 
-  constructor(private viewContainerRef: ViewContainerRef, private templateRef: TemplateRef<any>, 
-    private accountService: AccountService) { 
-      this.accountService.currentUser$.pipe(take(1)).subscribe({
-        next: user => {
-          if (user) this.user = user;
-        }
-      })
-    }
+  constructor(private viewContainerRef: ViewContainerRef, private templateRef: TemplateRef<any>) { }
 
   ngOnInit(): void {
     if (this.user?.roles.some(r => this.appHasRole.includes(r))) {
